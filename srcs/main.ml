@@ -1,1 +1,3 @@
-let () = print_endline "helloworl!d"
+let () = 
+  Parser.parse(Utils.get_infile);
+  print_endline "done"
