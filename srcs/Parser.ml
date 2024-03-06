@@ -1,4 +1,4 @@
-let rec parse_keymap file_channel curr_items =
+let rec parse_keymap file_channel curr_items keymapset =
   let readline_res = ParserUtils.readline_wrapper file_channel in
   match readline_res with
   | (1, _) -> raise (Failure "Failed to read sperator")
@@ -8,11 +8,15 @@ let rec parse_keymap file_channel curr_items =
     end else begin
       let tokens = String.split_on_char ':' str in
       let keymap = ParserUtils.validate_key tokens in
-      parse_keymap file_channel curr_items@[keymap]
+      match Types.KeymapSet.find_opt keymap keymapset with
+      | Some x -> raise (Failure "Duplicated keymap found")
+      | None ->
+        let new_keymapset = Types.KeymapSet.add keymap keymapset in
+        parse_keymap file_channel (curr_items@[keymap]) new_keymapset
     end
   | (_, _) -> raise (Failure "Unexpected readline_res")
 
-let rec parse_movemap file_channel (curr_items:Types.movemap list) keymaps =
+let rec parse_movemap file_channel (curr_items:Types.movemap list) keymaps movemapset =
   let readline_res = ParserUtils.readline_wrapper file_channel in
   match readline_res with
   | (1, _) -> curr_items
@@ -22,15 +26,21 @@ let rec parse_movemap file_channel (curr_items:Types.movemap list) keymaps =
     end else begin
       let tokens = String.split_on_char ':' str in
       let movemap = ParserUtils.validate_move tokens keymaps in
-      (*infix @ operator does not work here hmm?*)
-      parse_movemap file_channel (List.append curr_items [movemap]) keymaps
+      match Types.MovemapSet.find_opt movemap movemapset with
+      | Some x -> raise (Failure "Duplicated movemap found")
+      | None ->
+        let new_movemapset = Types.MovemapSet.add movemap movemapset in
+       parse_movemap file_channel (curr_items@[movemap]) keymaps new_movemapset
     end
   | (_, _) -> raise (Failure "Unexpected readline_res")
 
 let parse file_channel = 
-  let keymaps = parse_keymap file_channel [] in
-  let movemaps = parse_movemap file_channel [] keymaps in 
-  List.iter (fun x ->   Utils.print_movemap x) movemaps;
-
-  print_endline "lala"
+  let keymapset = Types.KeymapSet.empty in
+  let movemapset = Types.MovemapSet.empty in
+  let keymaps = parse_keymap file_channel [] keymapset in
+  let movemaps = parse_movemap file_channel [] keymaps movemapset in 
+  Types.{
+    keymap = keymaps;
+    movemap = movemaps;
+  }
 

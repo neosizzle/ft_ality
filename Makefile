@@ -1,10 +1,10 @@
 NAME = ft_ality
 
 # Order matters, no way to escape the interperter :()
-SRCS = srcs/Types.ml srcs/Utils.ml srcs/ParserUtils.ml srcs/Parser.ml srcs/main.ml
+SRCS = srcs/Utils.ml srcs/Types.ml srcs/TypeUtils.ml srcs/ParserUtils.ml srcs/Parser.ml srcs/main.ml
 SRCS_OBJS_NATIVE = $(SRCS:.ml=.cmx)
 
-INTERFACES = 
+INTERFACES =
 INTERFACES_OBJS = $(INTERFACES:.mli=.cmi)
 
 # PKGFLAGS = -package yojson,spectrum,core
@@ -57,7 +57,7 @@ setup_linux: #linux with apt
 
 .mli.cmi :
 	@echo "..........compiling headers........"
-	ocamlc -c $< -I srcs
+	ocamlopt -c $< -I srcs
 
 clean : 
 	rm -f srcs/*.o srcs/*.cmx srcs/*.cmi srcs/*.cmo

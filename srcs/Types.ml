@@ -18,13 +18,31 @@ type keyinfo = (string * string) (*symbol, name*)
 type keymap = (string * keyinfo) (*keystroke, keyinfo*)
 type movemap = (string * (keymap list)) (*movename, keymaps*)
 
-(*TODO - change this to a custom compare function that matches when one of the elems match*)
+(* Used to validate unique keysets *)
 module KeymapSet = Set.Make(struct
- type t = string * (string * string)
- let compare = compare (* This uses the built-in compare function for tuples *)
+	type t = string * (string * string)
+	let compare = fun (l_s1, (l_s2, l_s3)) (r_s1, (r_s2, r_s3)) ->
+		match compare l_s1 r_s1 with
+		| 0 -> 0
+		| _ ->
+			match compare l_s2 r_s2 with 
+			| 0 -> 0
+			| _ -> compare l_s3 r_s3
+end)
+
+(*Used to validate unique movesets*)
+module MovemapSet = Set.Make(struct
+	type t = (string * (keymap list))
+	let compare = fun (l_s1, l_l1) (r_s1, r_l1) ->
+		match compare l_s1 r_s1 with
+		| 0 -> 0
+		| _ ->
+			match Utils.lists_equal l_l1 r_l1 with
+			| true -> 0
+			| false -> 1
 end)
 
 type grammar = {
-  keymap: keymap;
-  movemap: movemap;
+  keymap: keymap list ;
+  movemap: movemap list ;
 }
