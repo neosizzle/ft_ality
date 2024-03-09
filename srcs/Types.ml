@@ -46,3 +46,24 @@ type grammar = {
   keymap: keymap list ;
   movemap: movemap list ;
 }
+
+(* State representation *)
+type state = (string * string) (*type - INIT | NORMAL | FINAL, name*)
+
+(* Moves representation *)
+type move = (string * state) (*read character, to state*)
+
+(*Transition representation*)
+type transition = (state * (move list)) (* current state, move list *) 
+
+(* machine representation *)
+(*
+current state;
+final accept states;
+all transitions	 	 
+*)
+type machine = {
+	curr_state: state;
+	final_accept: state list;
+	transitions: transition list;
+}

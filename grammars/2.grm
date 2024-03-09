@@ -1,5 +1,7 @@
 a:[SP]:Special attack
 v:[BL]:Block
+g:[KYS]:Killbind
 ---
-Hadouken:[SP]:[SP]
-Biden Blast:[BL]:[SP]:[SP]:[SP]:[SP]:[SP]:[SP]
+Hadouken:[SP]
+Biden Blast:[SP]:[BL]
+Haha:[SP]:[KYS]

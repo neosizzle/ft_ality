@@ -27,3 +27,9 @@ let rec lists_equal l1 l2 =
 let is_char s =
   let len = String.length s in
   len = 1 && ('a' <= s.[0] && s.[0] <= 'z')
+
+(* Strncmp from C *)
+let strncmp s1 s2 n =
+  let s1_sub = String.sub s1 0 (min n (String.length s1)) in
+  let s2_sub = String.sub s2 0 (min n (String.length s2)) in
+  String.compare s1_sub s2_sub
