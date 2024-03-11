@@ -1,7 +1,7 @@
 NAME = ft_ality
 
 # Order matters, no way to escape the interperter :()
-SRCS = srcs/Utils.ml srcs/Types.ml srcs/TypeUtils.ml srcs/ParserUtils.ml srcs/Parser.ml srcs/MachineBuilder.ml srcs/main.ml
+SRCS = srcs/Utils.ml srcs/Types.ml srcs/TypeUtils.ml srcs/ParserUtils.ml srcs/Parser.ml srcs/MachineBuilder.ml srcs/MachineExecutor.ml srcs/main.ml
 SRCS_OBJS_NATIVE = $(SRCS:.ml=.cmx)
 
 INTERFACES =

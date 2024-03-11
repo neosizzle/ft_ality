@@ -27,6 +27,6 @@ let print_transition transition =
   Format.printf "----------transition start-------\n";
   let state = fst transition in
   let movelist = snd transition in
-  Format.printf "statename: %s\n" (snd state);
+  Format.printf "readstate: %s\n" (snd state);
   List.iter (fun move -> print_move move) movelist;
   Format.printf "----------transition end-------\n"

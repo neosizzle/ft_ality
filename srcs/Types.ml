@@ -56,6 +56,10 @@ type move = (string * state) (*read character, to state*)
 (*Transition representation*)
 type transition = (state * (move list)) (* current state, move list *) 
 
+(* Path refrence coutner to count which states have existsed *)
+type path_ref_ctr_entry = (string * int) (* symbol, count *)
+type path_ref_ctr = path_ref_ctr_entry list
+
 (* machine representation *)
 (*
 current state;

@@ -5,8 +5,12 @@ let ends_with s1 s2 =
 
 (*Given a file path, get its input channel*)
 let get_infile = 
-  if (Array.length Sys.argv) != 2 then begin
-    print_endline "Usage: ./ft_ality <.grm file>";
+  if (Array.length Sys.argv) > 3 then begin
+    print_endline "Usage: ./ft_ality <.grm file> <-d [optional]>";
+    exit 1;
+  end;
+  if (Array.length Sys.argv) = 1 then begin
+    print_endline "Usage: ./ft_ality <.grm file> <debug mode [optional]>";
     exit 1;
   end;
   if ends_with Sys.argv.(1) ".grm"= false then begin
@@ -15,6 +19,16 @@ let get_infile =
   end;
   let in_ch = Stdlib.open_in Sys.argv.(1) in
   in_ch
+
+(* Determines if debug mode needs to be activated*)
+let is_debug = 
+if (Array.length Sys.argv) != 3 then
+  false
+else
+  if Sys.argv.(2) = "-d" then
+    true
+  else
+    false
 
 (*Compare 2 lists are equal*)
 let rec lists_equal l1 l2 =
@@ -33,3 +47,6 @@ let strncmp s1 s2 n =
   let s1_sub = String.sub s1 0 (min n (String.length s1)) in
   let s2_sub = String.sub s2 0 (min n (String.length s2)) in
   String.compare s1_sub s2_sub
+
+(* splits a string into a list of characters *)
+let ft_split s = List.init (String.length s) (String.get s);;

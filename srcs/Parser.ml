@@ -1,3 +1,4 @@
+(* Parse the keys section of the grammar file into a keymap list *)
 let rec parse_keymap file_channel curr_items keymapset =
   let readline_res = ParserUtils.readline_wrapper file_channel in
   match readline_res with
@@ -16,6 +17,7 @@ let rec parse_keymap file_channel curr_items keymapset =
     end
   | (_, _) -> raise (Failure "Unexpected readline_res")
 
+(* Parse the moves section of the grammar file into a movemap list *)
 let rec parse_movemap file_channel (curr_items:Types.movemap list) keymaps movemapset =
   let readline_res = ParserUtils.readline_wrapper file_channel in
   match readline_res with
@@ -34,6 +36,7 @@ let rec parse_movemap file_channel (curr_items:Types.movemap list) keymaps movem
     end
   | (_, _) -> raise (Failure "Unexpected readline_res")
 
+(* Shell function for parsing the input grammar file  *)
 let parse file_channel = 
   let keymapset = Types.KeymapSet.empty in
   let movemapset = Types.MovemapSet.empty in
