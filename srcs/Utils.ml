@@ -50,3 +50,8 @@ let strncmp s1 s2 n =
 
 (* splits a string into a list of characters *)
 let ft_split s = List.init (String.length s) (String.get s);;
+
+(* Prints a string and exists 1*)
+let print_and_exit string =
+  print_endline string;
+  exit 1;

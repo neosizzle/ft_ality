@@ -2,31 +2,31 @@
 
 (* Print keymap for debug *)
 let print_keymap (keymap: Types.keymap) = 
-  Format.printf "%s maps to %s(%s)\n" (fst keymap) (fst((snd keymap))) (snd((snd keymap)))
+  print_endline ((fst keymap) ^ " maps to " ^ (fst((snd keymap))) ^ "(" ^ (snd((snd keymap))) ^ ")")
 
 (* Print movemap for debug *)
 let print_movemap movemap = 
-  List.iter (fun keymap -> Format.printf "%s -> " (fst((snd keymap))) ) (snd movemap);
-  Format.printf "%s\n" (fst movemap)
+  List.iter (fun keymap -> print_string ((fst keymap) ^ " -> ") ) (snd movemap);
+  print_endline (fst movemap)
 
 (* Print state for debug *)
 let print_state state =
-  Format.printf "[%s] %s\n" (fst state) (snd state) 
+  print_endline ("[" ^ (fst state) ^ "] " ^ (snd state)) 
 
 (* Print move for debug *)
 let print_move move =
   let state = snd move in
   if fst move = "\n" then begin
-    Format.printf "read: (newline) -> [%s] %s\n" (fst state) (snd state) 
+    print_endline ("read: (newline) -> [" ^ (fst state) ^ "] " ^ (snd state))
   end
   else
-    Format.printf "read: %s -> [%s] %s\n" (fst move) (fst state) (snd state) 
+    print_endline ("read: " ^ (fst move) ^ " -> [" ^ (fst state) ^ "] " ^ (snd state)) 
 
 (* Print transition for debug *)
 let print_transition transition = 
-  Format.printf "----------transition start-------\n";
+  print_endline "----------transition start-------";
   let state = fst transition in
   let movelist = snd transition in
-  Format.printf "readstate: %s\n" (snd state);
+  print_endline ("readstate: " ^ (snd state));
   List.iter (fun move -> print_move move) movelist;
-  Format.printf "----------transition end-------\n"
+  print_endline "----------transition end-------"

@@ -42,6 +42,8 @@ let parse file_channel =
   let movemapset = Types.MovemapSet.empty in
   let keymaps = parse_keymap file_channel [] keymapset in
   let movemaps = parse_movemap file_channel [] keymaps movemapset in 
+  List.iter (fun keymap -> TypeUtils.print_keymap keymap) keymaps;
+  List.iter (fun movemap -> TypeUtils.print_movemap movemap) movemaps;
   Types.{
     keymap = keymaps;
     movemap = movemaps;

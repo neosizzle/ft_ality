@@ -1,3 +1,8 @@
+let print_debug_info is_debug move =
+  if is_debug then begin
+    TypeUtils.print_move move
+  end
+
 let remove_first_char str =
   if str = "" then "" else
   String.sub str 1 ((String.length str) - 1)
@@ -25,7 +30,6 @@ let rec process_line line (machine: Types.machine) is_debug =
   let in_finals = List.find_opt (fun state -> state = machine.curr_state) (machine.final_accept) in
   match in_finals with
   | Some final_state -> 
-    print_endline "Final state reached";
     TypeUtils.print_state final_state
   | None ->
     let read_char = extract_read_char line in
@@ -36,9 +40,10 @@ let rec process_line line (machine: Types.machine) is_debug =
     | Some transition ->
       match locate_move (snd transition) read_char with
       | None -> 
-        print_string "No move found for read_char";
+        print_string "No move found for read_char: ";
         print_endline read_char
       | Some move ->
+        print_debug_info is_debug move;
         let amended_line = remove_first_char line in
         let amended_machine = cpy_machine_with_to_state machine (snd move) in
         process_line amended_line amended_machine is_debug
@@ -46,7 +51,13 @@ let rec process_line line (machine: Types.machine) is_debug =
 let rec execute machine is_debug = 
   try
     let line = input_line stdin in
+    if is_debug then begin
+      print_endline "~~~~~~~~ Machine execution begin ~~~~~~~~~"
+    end;
     process_line line machine is_debug;
-    execute machine is_debug
+    if is_debug then begin
+      print_endline "~~~~~~~~ Machine execution end ~~~~~~~~~\n"
+    end;
+    execute machine is_debug ;
   with End_of_file ->
     print_endline "End of input."

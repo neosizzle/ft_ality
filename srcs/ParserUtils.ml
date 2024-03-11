@@ -11,13 +11,11 @@ let validate_key tokens =
   match tokens with
   | [keystroke; symbol; name] ->
     if Utils.is_char keystroke = false then begin
-      print_endline "keystroke must be alphabet";
-      exit 1
+      Utils.print_and_exit "keystroke must be alphabet";
     end;
     (keystroke, (symbol, name))
   | _ -> 
-    print_endline "keymap must be in format <keystroke>:<symbol>:<name>";
-    exit 1
+    Utils.print_and_exit "keymap must be in format <keystroke>:<symbol>:<name>"
 
 (* Validates movemap tokens, and returns a movemap type once validated *)
 let validate_move tokens keymaps =
@@ -31,10 +29,8 @@ let validate_move tokens keymaps =
       match List.find_opt (fun keymap -> fst(snd keymap) = symbol) keymaps with
       | Some res -> res 
       | None -> 
-        Format.printf "Symbol %s not found in keymap" symbol;
-        exit 1
+        Utils.print_and_exit ("Symbol " ^ symbol ^ " not found in keymap")
     ) symbols in
     (movename, keymap)
   | _ -> 
-    print_endline "movemap must be in format <name>:<symbol>:...";
-    exit 1
+    Utils.print_and_exit "movemap must be in format <name>:<symbol>:..."
