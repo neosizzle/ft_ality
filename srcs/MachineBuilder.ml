@@ -1,43 +1,23 @@
 (* Generates a unique symbol name for each symbol - used to diffrienciate duplicates *)
 (* However this will not make the state machine a tree anymore without further refactoring, it will make the machine
-Look like multiple linked lists with a common head *)
-let get_symbol_id keymap path_ref_counter =
+Look like multiple linked lists with a common - needed for homonymus rules *)
+let get_symbol_id keymap trans_list =
   let symbol = fst (snd keymap) in
-  match List.find_opt (fun entry -> fst entry = symbol ) path_ref_counter with
-  | Some entry -> 
-    let num = (snd entry) in
-    "_" ^ string_of_int num
-  | None -> ""
-
-(* Increments value in path ref counter*)
-let increm_ref_ctr symbol path_ref_counter =
-  match List.find_opt (fun entry -> fst entry = symbol) path_ref_counter with
-  | None -> path_ref_counter@[(symbol, 0)]
-  | Some found_entry -> 
-    List.map (fun entry -> 
-      if entry = found_entry then
-        (fst entry, (snd entry) + 1)
-      else
-        entry
-      ) path_ref_counter
+  let filtered = List.find_all (fun x -> 
+    Utils.strncmp (snd (fst x)) symbol (String.length symbol) = 0
+    ) trans_list in
+  match List.length filtered with
+  | 0 -> ""
+  | len -> "_" ^ (string_of_int len)
 
 (* Adds a move to an existing state; the move will be configured by user input *)
-(* This function denies dupes, but allow newlines to be duplicated *)
-let add_move_to (base: Types.transition list) watchstate to_state keystroke =
-
+(* This function denies dupes*)
+let add_move_to (base: Types.transition list) watchstate to_state keystroke = 
   List.map (fun transition -> 
     if fst transition != watchstate then 
       transition
     else
-      let moves = snd transition in
-      match List.find_opt (fun move -> fst move = keystroke) moves with
-      | Some _ -> 
-        if keystroke = "\n" then
-          (fst transition, moves@[(keystroke, to_state)])
-        else
-          transition
-      | None ->
-        (fst transition, moves@[(keystroke, to_state)])
+      (fst transition, (snd transition)@[(keystroke, to_state)])
     ) base
 
 (* Cretes a new state in the transitions list with no moves *)
@@ -50,25 +30,24 @@ This will call recursively until movemap is empty.
 
 The watchstate is a state that represents the current state of the generation.
 We wither add the moves to this state; or create a new state to add moves to. *)
-let rec apply_path base movemap watchstate path_ref_counter =
+let rec apply_path base movemap watchstate =
   let symbols = snd movemap in
   match symbols with
   | [] -> 
     let final_state = ("FINAL", fst movemap) in
     add_move_to base watchstate final_state "\n"
   | head :: tail -> 
-    let head_symbol = (fst (snd head)) ^ get_symbol_id head path_ref_counter in (*generate ID here*)
-    let new_ref_ctr = increm_ref_ctr (fst (snd head)) path_ref_counter in
+    let head_symbol = (fst (snd head)) ^ get_symbol_id head base in (*generate ID here*)
     let head_state = ("NORMAL", head_symbol) in
     let found_trans = List.find_opt (fun transition -> fst transition = head_state) base in
     match found_trans with
     | Some trans -> 
       let new_base = add_move_to base watchstate head_state (fst head) in
-      apply_path new_base (fst movemap, tail) (fst trans) new_ref_ctr
+      apply_path new_base (fst movemap, tail) (fst trans)
     | None -> 
       let base_added_state = add_state_to base head_state in
       let new_base = add_move_to base_added_state watchstate head_state (fst head) in
-      apply_path new_base (fst movemap, tail) head_state new_ref_ctr
+      apply_path new_base (fst movemap, tail) head_state
 
 (* Shell function to generate a populated list; the idea is to generate the transitions branch by branch
 (branch meaning a path from init state to a the final symbol of that state)
@@ -78,12 +57,11 @@ let rec populate_transition base_transitions movemaps init_state =
   match movemaps with
   | [] -> base_transitions
   | head :: [] ->
-    apply_path base_transitions head init_state []
+    apply_path base_transitions head init_state
   | head :: tail -> 
-    let new_base = apply_path base_transitions head init_state [] in
+    let new_base = apply_path base_transitions head init_state in
     populate_transition new_base tail init_state
 
-(* TODO print on debug  *)
 (* Shell function to build the transitions part of a machine struct; will declare an initial transition list
 and then populate use that to generate a fully populated list *)
 let build_transitions movemaps init_state = 

@@ -12,6 +12,6 @@ for filename in os.listdir(directory):
     
     # Execute the program with the file as an argument
     result = subprocess.run([program, file_path], capture_output=True, text=True)
-    
+	
     # Print the output of the program
     print(f'{filename} returns {result.returncode}')

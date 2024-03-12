@@ -29,7 +29,8 @@ let rec parse_movemap file_channel (curr_items:Types.movemap list) keymaps movem
       let tokens = String.split_on_char ':' str in
       let movemap = ParserUtils.validate_move tokens keymaps in
       match Types.MovemapSet.find_opt movemap movemapset with
-      | _ -> let new_movemapset = Types.MovemapSet.add movemap movemapset in
+      | Some x -> Utils.print_and_exit "Duplicated move"
+      | None -> let new_movemapset = Types.MovemapSet.add movemap movemapset in
         parse_movemap file_channel (curr_items@[movemap]) keymaps new_movemapset
     end
   | (_, _) -> Utils.print_and_exit "Unexpected readline_res"

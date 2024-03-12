@@ -9,7 +9,7 @@ INTERFACES_OBJS = $(INTERFACES:.mli=.cmi)
 
 # PKGFLAGS = -package yojson,spectrum,core
 PKGFLAGS =
-LINKFLAGS = -linkpkg 
+LINKFLAGS =
 
 all : $(NAME)
 
@@ -17,7 +17,7 @@ all : $(NAME)
 $(NAME): $(INTERFACES_OBJS) $(SRCS_OBJS_NATIVE) 
 	@echo "..........native linking........"
 	eval `opam env` && ocamlfind ocamlopt $(PKGFLAGS) $(LINKFLAGS) -o $(NAME) $(SRCS_OBJS_NATIVE) -I srcs
-	$(MAKE) clean
+	# $(MAKE) clean
 
 setup_mac : # mac with brew only
 	hash -r

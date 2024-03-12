@@ -1,6 +1,7 @@
-a:[L]:Left
-b:[F]:Foot
+a:[A]:Left
+b:[B]:Right
 ---
-Frontflip:[L]:[L]
-Backflip:[L]:[L]
-FOOOT:[F]:[L]:[L]
+Frontflip:[A]:[A]
+Backflip:[A]:[A]
+Sideflip:[A]:[A]
+4DFlip:[B]:[A]:[A]

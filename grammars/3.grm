@@ -3,6 +3,6 @@ b:[BL]:Block
 c:[L]:Left
 d:[R]:Right
 ---
-Hadouken:[SP]:[SP]:[BL]
-Charge:[BL]:[L]
-Smash:[L]:[R]:[SP]
+Hadouken:[SP]:[L]:[BL]
+Charge:[SP]:[L]
+Smash:[SP]
