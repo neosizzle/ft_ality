@@ -1,3 +1,8 @@
-a:[SP]:Special attack
+u:[SP]:Special attack
+i:[BL]:Block
+a:[L]:Left
+d:[R]:Right
 ---
-Hadouken:[SP]:[SP]
+Hadouken:[SP]:[SP]:[BL]
+Frontflip:[L]:[L]
+Backflip:[L]:[L]

@@ -1,6 +1,6 @@
-a:[SP]:Special attack
-v:[BL]:Block
-g:[KYS]:Killbind
+a:[L]:Left
+b:[F]:Foot
 ---
-Hadouken:[SP]:[SP]:[BL]
-Haha:[BL]:[SP]:[SP]:[KYS]
+Frontflip:[L]:[L]
+Backflip:[L]:[L]
+FOOOT:[F]:[L]:[L]

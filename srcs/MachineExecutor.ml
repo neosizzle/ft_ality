@@ -26,6 +26,9 @@ let locate_transition curr_state transitions =
 let locate_move moves read_char =
   List.find_opt (fun move -> fst move = read_char) moves
 
+let locate_moves moves read_char =
+  List.filter (fun move -> fst move = read_char) moves
+
 let rec process_line line (machine: Types.machine) is_debug =
   let in_finals = List.find_opt (fun state -> state = machine.curr_state) (machine.final_accept) in
   match in_finals with
@@ -38,15 +41,17 @@ let rec process_line line (machine: Types.machine) is_debug =
       print_string "No transition found for curr_state";
       print_endline (snd machine.curr_state)
     | Some transition ->
-      match locate_move (snd transition) read_char with
-      | None -> 
-        print_string "No move found for read_char: ";
-        print_endline read_char
-      | Some move ->
-        print_debug_info is_debug move;
-        let amended_line = remove_first_char line in
-        let amended_machine = cpy_machine_with_to_state machine (snd move) in
-        process_line amended_line amended_machine is_debug
+        let possible_moves = locate_moves (snd transition) read_char in
+        if List.length possible_moves != 0 then begin
+          List.iter (fun move ->
+            print_debug_info is_debug move;
+            let amended_line = remove_first_char line in
+            let amended_machine = cpy_machine_with_to_state machine (snd move) in
+            process_line amended_line amended_machine is_debug
+            ) possible_moves
+        end else
+          print_string "No move found for read_char: "
+          print_endline read_char
 
 let rec execute machine is_debug = 
   try

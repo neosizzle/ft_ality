@@ -22,6 +22,7 @@ let increm_ref_ctr symbol path_ref_counter =
       ) path_ref_counter
 
 (* Adds a move to an existing state; the move will be configured by user input *)
+(* This function denies dupes, but allow newlines to be duplicated *)
 let add_move_to (base: Types.transition list) watchstate to_state keystroke =
 
   List.map (fun transition -> 
@@ -30,8 +31,13 @@ let add_move_to (base: Types.transition list) watchstate to_state keystroke =
     else
       let moves = snd transition in
       match List.find_opt (fun move -> fst move = keystroke) moves with
-      | Some _ -> transition
-      | None -> (fst transition, moves@[(keystroke, to_state)])
+      | Some _ -> 
+        if keystroke = "\n" then
+          (fst transition, moves@[(keystroke, to_state)])
+        else
+          transition
+      | None ->
+        (fst transition, moves@[(keystroke, to_state)])
     ) base
 
 (* Cretes a new state in the transitions list with no moves *)
